@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../models/story_segment.dart';
 import 'girlfriend_setup_screen.dart';
+import 'dashboard_screen.dart';
 
 class LifeMemoryScreen extends StatelessWidget {
   final GirlfriendConfig girlfriendConfig;
@@ -353,18 +354,33 @@ class LifeMemoryScreen extends StatelessWidget {
                                       Expanded(
                                         child: OutlinedButton(
                                           style: OutlinedButton.styleFrom(
-                                            side: const BorderSide(color: Color(0xFFFFB6C1)),
+                                            side: const BorderSide(
+                                              color: Color(0xFFFFB6C1),
+                                            ),
                                             shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(10),
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
                                             ),
                                           ),
                                           onPressed: () {
-                                            // 一覧へ戻る：モーダルを閉じる
+                                            // 一覧へ戻る：モーダルを閉じてダッシュボードへ遷移
                                             Navigator.of(ctx).pop();
+                                            Navigator.of(context).pushReplacement(
+                                              MaterialPageRoute(
+                                                builder: (c) => DashboardScreen(girlfriendConfig: girlfriendConfig),
+                                              ),
+                                            );
                                           },
                                           child: const Padding(
-                                            padding: EdgeInsets.symmetric(vertical: 12),
-                                            child: Text('一覧へ戻る', style: TextStyle(color: Color(0xFFB91C1C))),
+                                            padding: EdgeInsets.symmetric(
+                                              vertical: 12,
+                                            ),
+                                            child: Text(
+                                              '一覧へ戻る',
+                                              style: TextStyle(
+                                                color: Color(0xFFB91C1C),
+                                              ),
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -372,21 +388,39 @@ class LifeMemoryScreen extends StatelessWidget {
                                       Expanded(
                                         child: OutlinedButton(
                                           style: OutlinedButton.styleFrom(
-                                            backgroundColor: Colors.pink.shade50,
+                                            backgroundColor:
+                                                Colors.pink.shade50,
                                             shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(10),
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
                                             ),
                                           ),
                                           onPressed: () async {
-                                            final textToShare = '${segment.title}\n${segment.age}歳\n\n${segment.description}';
-                                            await Clipboard.setData(ClipboardData(text: textToShare));
-                                            ScaffoldMessenger.of(ctx).showSnackBar(
-                                              const SnackBar(content: Text('内容をコピーしました。貼り付けて共有してください。')),
+                                            final textToShare =
+                                                '${segment.title}\n${segment.age}歳\n\n${segment.description}';
+                                            await Clipboard.setData(
+                                              ClipboardData(text: textToShare),
+                                            );
+                                            ScaffoldMessenger.of(
+                                              ctx,
+                                            ).showSnackBar(
+                                              const SnackBar(
+                                                content: Text(
+                                                  '内容をコピーしました。貼り付けて共有してください。',
+                                                ),
+                                              ),
                                             );
                                           },
                                           child: const Padding(
-                                            padding: EdgeInsets.symmetric(vertical: 12),
-                                            child: Text('共有', style: TextStyle(color: Color(0xFFB91C1C))),
+                                            padding: EdgeInsets.symmetric(
+                                              vertical: 12,
+                                            ),
+                                            child: Text(
+                                              '共有',
+                                              style: TextStyle(
+                                                color: Color(0xFFB91C1C),
+                                              ),
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -400,13 +434,20 @@ class LifeMemoryScreen extends StatelessWidget {
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor: accentColor,
                                         shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(12),
+                                          borderRadius: BorderRadius.circular(
+                                            12,
+                                          ),
                                         ),
                                       ),
                                       onPressed: () => Navigator.of(ctx).pop(),
                                       child: const Padding(
-                                        padding: EdgeInsets.symmetric(vertical: 12),
-                                        child: Text('閉じる', style: TextStyle(fontSize: 16)),
+                                        padding: EdgeInsets.symmetric(
+                                          vertical: 12,
+                                        ),
+                                        child: Text(
+                                          '閉じる',
+                                          style: TextStyle(fontSize: 16),
+                                        ),
                                       ),
                                     ),
                                   ),
