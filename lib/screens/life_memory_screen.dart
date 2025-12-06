@@ -365,9 +365,15 @@ class LifeMemoryScreen extends StatelessWidget {
                                           onPressed: () {
                                             // 一覧へ戻る：モーダルを閉じてダッシュボードへ遷移
                                             Navigator.of(ctx).pop();
-                                            Navigator.of(context).pushReplacement(
+                                            Navigator.of(
+                                              context,
+                                            ).pushReplacement(
                                               MaterialPageRoute(
-                                                builder: (c) => DashboardScreen(girlfriendConfig: girlfriendConfig),
+                                                builder:
+                                                    (c) => DashboardScreen(
+                                                      girlfriendConfig:
+                                                          girlfriendConfig,
+                                                    ),
                                               ),
                                             );
                                           },
