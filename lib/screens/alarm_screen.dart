@@ -1,20 +1,8 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import '../models/story_segment.dart';
 import 'girlfriend_setup_screen.dart';
-
-class StorySegment {
-  final int age;
-  final String title;
-  final String description;
-  final String imageEmoji;
-
-  StorySegment({
-    required this.age,
-    required this.title,
-    required this.description,
-    required this.imageEmoji,
-  });
-}
+import 'life_memory_screen.dart';
 
 class HeartData {
   final int id;
@@ -130,8 +118,6 @@ class _AlarmScreenState extends State<AlarmScreen>
   late final int _sleepQuality;
   late final List<StorySegment> _story;
   late final List<HeartData> _floatingHearts;
-  bool _showStory = false;
-  int _currentStoryIndex = 0;
 
   @override
   void initState() {
@@ -587,9 +573,17 @@ class _AlarmScreenState extends State<AlarmScreen>
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
-        onPressed: () {
-          setState(() => _showStory = true);
-        },
+        onPressed:
+            () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder:
+                    (context) => LifeMemoryScreen(
+                      girlfriendConfig: widget.girlfriendConfig,
+                      storySegments: _story,
+                      accentColor: _resolveHairColor(),
+                    ),
+              ),
+            ),
         style: ElevatedButton.styleFrom(
           padding: const EdgeInsets.symmetric(vertical: 16),
           backgroundColor: Colors.transparent,
@@ -638,292 +632,11 @@ class _AlarmScreenState extends State<AlarmScreen>
     );
   }
 
-  Widget _buildStoryView() {
-    final hairColorGradient =
-        hairColorMap[widget.girlfriendConfig.hairColor] ?? Colors.pink;
-
-    return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [Color(0xFFFFE4F0), Color(0xFFEDE7FF), Color(0xFFCFE4FF)],
-        ),
-      ),
-      child: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-          child: Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 900),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Center(
-                    child: Column(
-                      children: [
-                        Text(
-                          '${widget.girlfriendConfig.name}の人生',
-                          style: const TextStyle(
-                            fontSize: 32,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFFB91C1C),
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        const Text(
-                          'Sleep Dive Memory Log',
-                          style: TextStyle(color: Color(0xFFB91C1C)),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  Column(
-                    children:
-                        _story
-                            .asMap()
-                            .entries
-                            .map(
-                              (entry) => _buildStorySegment(
-                                entry.key,
-                                entry.value,
-                                hairColorGradient,
-                              ),
-                            )
-                            .toList(),
-                  ),
-                  const SizedBox(height: 24),
-                  _buildStoryNavigation(),
-                  const SizedBox(height: 24),
-                  _buildFutureFeatures(),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildStorySegment(int index, StorySegment segment, Color accent) {
-    final isActive = index <= _currentStoryIndex;
-
-    return AnimatedOpacity(
-      duration: const Duration(milliseconds: 500),
-      opacity: isActive ? 1 : 0.35,
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 16),
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(24),
-          color: Colors.white.withOpacity(0.85),
-          border: Border.all(
-            color: isActive ? const Color(0xFFFF69B4) : const Color(0xFFFFB6C1),
-            width: isActive ? 2 : 1,
-          ),
-          boxShadow:
-              isActive
-                  ? const [
-                    BoxShadow(
-                      color: Color(0x33FF69B4),
-                      blurRadius: 25,
-                      offset: Offset(0, 10),
-                    ),
-                  ]
-                  : null,
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Column(
-              children: [
-                Container(
-                  width: 64,
-                  height: 64,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: LinearGradient(
-                      colors: [accent, Colors.pink.shade200],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                    border: Border.all(
-                      color: const Color(0xFFFF69B4),
-                      width: 2,
-                    ),
-                  ),
-                  child: Center(
-                    child: Text(
-                      segment.imageEmoji,
-                      style: const TextStyle(fontSize: 28),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  '${segment.age}歳',
-                  style: const TextStyle(
-                    color: Color(0xFFB91C1C),
-                    fontSize: 12,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    segment.title,
-                    style: const TextStyle(
-                      fontSize: 20,
-                      color: Color(0xFFB91C1C),
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  Text(
-                    segment.description,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      color: Color(0xFF4C1D95),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildStoryNavigation() {
-    if (_currentStoryIndex < _story.length - 1) {
-      return SizedBox(
-        width: double.infinity,
-        child: ElevatedButton(
-          onPressed: () => setState(() => _currentStoryIndex += 1),
-          style: ElevatedButton.styleFrom(
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            backgroundColor: Colors.pink,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            elevation: 6,
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: const [Text('次の記憶へ →', style: TextStyle(fontSize: 16))],
-          ),
-        ),
-      );
-    }
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.8),
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: const Color(0xFFFFB6C1)),
-          ),
-          child: Column(
-            children: [
-              const Icon(Icons.favorite, color: Color(0xFFB91C1C), size: 32),
-              const SizedBox(height: 8),
-              const Text(
-                '記憶の復元完了',
-                style: TextStyle(color: Color(0xFFB91C1C), fontSize: 16),
-              ),
-              const SizedBox(height: 4),
-              const Text(
-                '継続的な睡眠でより豊かな人生を',
-                style: TextStyle(color: Color(0xFF4C1D95), fontSize: 12),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 12),
-        Row(
-          children: [
-            Expanded(
-              child: ElevatedButton(
-                onPressed:
-                    () => setState(() {
-                      _showStory = false;
-                      _currentStoryIndex = 0;
-                    }),
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  backgroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  side: const BorderSide(color: Color(0xFFFFB6C1)),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Icon(Icons.rotate_left, color: Color(0xFFB91C1C)),
-                    SizedBox(width: 6),
-                    Text('もう一度見る', style: TextStyle(color: Color(0xFFB91C1C))),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: ElevatedButton(
-                onPressed: widget.onBack,
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  backgroundColor: Colors.pink,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Icon(Icons.home, color: Colors.white),
-                    SizedBox(width: 6),
-                    Text('ダッシュボードへ', style: TextStyle(color: Colors.white)),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildFutureFeatures() {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.7),
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: const Color(0xFFFFB6C1)),
-      ),
-      child: const Text(
-        '追加予定機能：図鑑登録 / 彼女の部屋 / 転生システム / ボイス再生',
-        textAlign: TextAlign.center,
-        style: TextStyle(color: Color(0xFF4C1D95), fontSize: 12),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFFFF0F5),
-      body: _showStory ? _buildStoryView() : _buildMorningView(),
+      body: _buildMorningView(),
     );
   }
 }
