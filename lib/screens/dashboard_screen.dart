@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'alarm_screen.dart';
 import 'girlfriend_setup_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -134,6 +135,16 @@ class _DashboardScreenState extends State<DashboardScreen>
       SnackBar(
         content: Text('夢の世界へダイブします… $bedtimeStr → $wakeStr'),
         backgroundColor: Colors.purple[900],
+      ),
+    );
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder:
+            (context) => AlarmScreen(
+              girlfriendConfig: widget.girlfriendConfig,
+              sleepData: {'bedtime': bedtimeStr, 'wakeTime': wakeStr},
+              onBack: () => Navigator.of(context).pop(),
+            ),
       ),
     );
   }
