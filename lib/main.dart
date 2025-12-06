@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'screens/login_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -30,7 +31,13 @@ class MyApp extends StatelessWidget {
         // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      // For demo: replace with login screen
+      home: LoginScreen(
+        onComplete: (data) {
+          // replace this with your app flow
+          debugPrint('Login completed: $data');
+        },
+      ),
     );
   }
 }
