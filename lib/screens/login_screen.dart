@@ -109,7 +109,7 @@ class _LoginScreenState extends State<LoginScreen>
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [Color(0xFF2A0C42), Colors.black, Color(0xFF19002C)],
+            colors: [Color(0xFF4A0E62), Colors.black, Color(0xFF29004C)], // Brighter Purple Gradient
             stops: [0.0, 0.5, 1.0],
           ),
         ),
@@ -164,10 +164,10 @@ class _LoginScreenState extends State<LoginScreen>
                         style: TextStyle(
                           fontSize: 38,
                           fontWeight: FontWeight.bold,
-                          color: Color(0xFFFF00FF),
+                          color: Color(0xFFFF40FF), // Brighter Pink
                           shadows: [
-                            Shadow(blurRadius: 8, color: Color(0xFFEA00FF)),
-                            Shadow(blurRadius: 20, color: Color(0xFF9400FF)),
+                            Shadow(blurRadius: 10, color: Color(0xFFFF00FF)),
+                            Shadow(blurRadius: 30, color: Color(0xFFD500F9)),
                           ],
                         ),
                       ),
@@ -197,12 +197,12 @@ class _LoginScreenState extends State<LoginScreen>
                               color: const Color.fromRGBO(26, 10, 46, 0.78),
                               borderRadius: BorderRadius.circular(12),
                               border: Border.all(
-                                color: Colors.purple.withOpacity(0.4),
+                                color: Colors.purple.withValues(alpha: 0.4),
                               ),
                               boxShadow: const [
                                 BoxShadow(
-                                  color: Color(0x30FF00FF),
-                                  blurRadius: 20,
+                                  color: Color(0x50FF00FF), // Stronger glow
+                                  blurRadius: 30,
                                 ),
                               ],
                             ),
@@ -324,16 +324,16 @@ class _LoginScreenState extends State<LoginScreen>
                                       decoration: BoxDecoration(
                                         gradient: const LinearGradient(
                                           colors: [
-                                            Color(0xFFFF5AA2),
-                                            Color(0xFF7B61FF),
+                                            Color(0xFFFF00CC), // Brighter Pink
+                                            Color(0xFFD500F9), // Vivid Purple
                                           ],
                                         ),
                                         borderRadius: BorderRadius.circular(10),
                                         boxShadow: const [
                                           BoxShadow(
-                                            color: Color(0x66FF00FF),
-                                            blurRadius: 20,
-                                            spreadRadius: 1,
+                                            color: Color(0xAAFF00FF), // Stronger glow
+                                            blurRadius: 25,
+                                            spreadRadius: 2,
                                           ),
                                         ],
                                       ),
@@ -408,11 +408,11 @@ InputDecoration _inputDecoration(String placeholder, {Widget? suffix}) {
     contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
     enabledBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(8),
-      borderSide: BorderSide(color: Colors.purple.withOpacity(0.6)),
+      borderSide: BorderSide(color: Colors.purple.withValues(alpha: 0.6)),
     ),
     focusedBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(8),
-      borderSide: const BorderSide(color: Color(0xFFFF66BB)),
+      borderSide: const BorderSide(color: Color(0xFFFF40FF), width: 2), // Brighter Pink border
     ),
     suffixIcon:
         suffix != null
@@ -439,7 +439,7 @@ class FieldLabel extends StatelessWidget {
           const SizedBox(width: 6),
           const Text(
             '*',
-            style: TextStyle(color: Color(0xFFFF66BB), fontSize: 13),
+            style: TextStyle(color: Color(0xFFFF40FF), fontSize: 13),
           ),
         ],
       ),
