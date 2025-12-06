@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'dashboard_screen.dart';
 
 class GirlfriendConfig {
   final String name;
@@ -85,7 +86,32 @@ class _GirlfriendSetupScreenState extends State<GirlfriendSetupScreen> {
         hairColor: _hairColor,
         outfit: _outfit,
       );
+      // Call parent callback if provided
       widget.onComplete(config);
+
+      // Navigate to the Dashboard screen, passing the newly created Girlfriend config
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => DashboardScreen(
+            girlfriendConfig: config,
+            userName: _nameController.text,
+            sleepTime: '23:00',
+            onDive: (sleepData) {
+              // Default behavior — show a dialog to demonstrate callback
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: const Text('ダイブ開始'),
+                  content: Text('就寝: ${sleepData['bedtime']} → 起床: ${sleepData['wakeTime']}'),
+                  actions: [
+                    TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('閉じる')),
+                  ],
+                ),
+              );
+            },
+          ),
+        ),
+      );
     }
   }
 
