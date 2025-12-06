@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'screens/login_screen.dart';
 import 'screens/opening_screen.dart';
+import 'screens/girlfriend_setup_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -22,6 +23,8 @@ class MyApp extends StatelessWidget {
   }
 }
 
+enum AppStage { opening, login, setup, home }
+
 class AppFlow extends StatefulWidget {
   const AppFlow({super.key});
 
@@ -30,25 +33,44 @@ class AppFlow extends StatefulWidget {
 }
 
 class _AppFlowState extends State<AppFlow> {
-  bool _showOpening = true;
+  AppStage _stage = AppStage.opening;
 
   @override
   Widget build(BuildContext context) {
-    if (_showOpening) {
-      return OpeningScreen(
-        onComplete: () {
-          setState(() {
-            _showOpening = false;
-          });
-        },
-      );
+    switch (_stage) {
+      case AppStage.opening:
+        return OpeningScreen(
+          onComplete: () {
+            setState(() {
+              _stage = AppStage.login;
+            });
+          },
+        );
+      case AppStage.login:
+        return LoginScreen(
+          onComplete: (data) {
+            debugPrint('Login completed: $data');
+            setState(() {
+              _stage = AppStage.setup;
+            });
+          },
+        );
+      case AppStage.setup:
+        return GirlfriendSetupScreen(
+          onComplete: (config) {
+            debugPrint('Setup completed: $config');
+            // Navigate to home or next screen
+            setState(() {
+              _stage = AppStage.home;
+            });
+          },
+        );
+      case AppStage.home:
+        return const Scaffold(
+          body: Center(
+            child: Text('Home Screen (To be implemented)'),
+          ),
+        );
     }
-    
-    return LoginScreen(
-      onComplete: (data) {
-        debugPrint('Login completed: $data');
-        // Navigate to next screen or handle login success
-      },
-    );
   }
 }
