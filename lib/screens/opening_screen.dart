@@ -42,15 +42,35 @@ class _OpeningScreenState extends State<OpeningScreen>
     'あなたは「マスター」として選ばれた。',
   ];
 
-  late AnimationController _gridController;
+  late AnimationController _bubbleController;
+  late AnimationController _earthController;
+  late List<BubbleData> _bubbles;
 
   @override
   void initState() {
     super.initState();
-    _gridController = AnimationController(
+    
+    _bubbleController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 20),
     )..repeat();
+
+    _earthController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 30),
+    )..repeat();
+
+    // Generate random bubbles
+    final random = math.Random();
+    _bubbles = List.generate(15, (index) {
+      return BubbleData(
+        x: random.nextDouble(),
+        y: random.nextDouble(),
+        size: 40 + random.nextDouble() * 80,
+        speed: 0.3 + random.nextDouble() * 0.7,
+        delay: random.nextDouble(),
+      );
+    });
 
     _startStory();
   }
@@ -62,9 +82,6 @@ class _OpeningScreenState extends State<OpeningScreen>
           setState(() {
             _currentLine++;
           });
-          // Auto scroll to bottom if needed, though the design seems to fit in one screen mostly?
-          // If it gets long, we might want to scroll.
-          // Let's just let it build up.
           _startStory();
         }
       });
@@ -80,7 +97,8 @@ class _OpeningScreenState extends State<OpeningScreen>
   @override
   void dispose() {
     _timer?.cancel();
-    _gridController.dispose();
+    _bubbleController.dispose();
+    _earthController.dispose();
     _scrollController.dispose();
     super.dispose();
   }
@@ -88,28 +106,99 @@ class _OpeningScreenState extends State<OpeningScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
       body: Stack(
         children: [
-          // Animated background grid
-          Positioned.fill(
-            child: Opacity(
-              opacity: 0.2,
-              child: Transform(
-                transform: Matrix4.identity()
-                  ..setEntry(3, 2, 0.001) // Perspective
-                  ..rotateX(60 * math.pi / 180),
-                alignment: Alignment.center,
-                child: AnimatedBuilder(
-                  animation: _gridController,
-                  builder: (context, child) {
-                    return CustomPaint(
-                      painter: GridPainter(offset: _gridController.value),
-                      size: Size.infinite,
-                    );
-                  },
-                ),
+          // Gradient Background
+          Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Color(0xFF0A4D8C), // Deep Blue
+                  Color(0xFF1E3A8A), // Royal Blue
+                  Color(0xFF4C1D95), // Purple
+                  Color(0xFF831843), // Deep Pink
+                ],
+                stops: [0.0, 0.3, 0.7, 1.0],
               ),
+            ),
+          ),
+
+          // Floating Bubbles
+          ...List.generate(_bubbles.length, (index) {
+            final bubble = _bubbles[index];
+            return AnimatedBuilder(
+              animation: _bubbleController,
+              builder: (context, child) {
+                final progress = (_bubbleController.value + bubble.delay) % 1.0;
+                final yPos = bubble.y + (progress * bubble.speed);
+                
+                return Positioned(
+                  left: bubble.x * MediaQuery.of(context).size.width,
+                  top: (yPos % 1.0) * MediaQuery.of(context).size.height,
+                  child: Opacity(
+                    opacity: 0.3,
+                    child: Container(
+                      width: bubble.size,
+                      height: bubble.size,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: RadialGradient(
+                          colors: [
+                            const Color(0xFF00D9FF).withValues(alpha: 0.4),
+                            const Color(0xFFFF00FF).withValues(alpha: 0.1),
+                            Colors.transparent,
+                          ],
+                          stops: const [0.0, 0.7, 1.0],
+                        ),
+                        border: Border.all(
+                          color: const Color(0xFF00D9FF).withValues(alpha: 0.3),
+                          width: 2,
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            );
+          }),
+
+          // Rotating Earth
+          Positioned(
+            right: -100,
+            top: 100,
+            child: AnimatedBuilder(
+              animation: _earthController,
+              builder: (context, child) {
+                return Transform.rotate(
+                  angle: _earthController.value * 2 * math.pi,
+                  child: Opacity(
+                    opacity: 0.15,
+                    child: Container(
+                      width: 300,
+                      height: 300,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: RadialGradient(
+                          colors: [
+                            const Color(0xFF00D9FF).withValues(alpha: 0.6),
+                            const Color(0xFF0080FF).withValues(alpha: 0.3),
+                            Colors.transparent,
+                          ],
+                        ),
+                        border: Border.all(
+                          color: const Color(0xFF00D9FF).withValues(alpha: 0.4),
+                          width: 3,
+                        ),
+                      ),
+                      child: CustomPaint(
+                        painter: EarthPatternPainter(),
+                      ),
+                    ),
+                  ),
+                );
+              },
             ),
           ),
 
@@ -119,11 +208,11 @@ class _OpeningScreenState extends State<OpeningScreen>
               child: SingleChildScrollView(
                 controller: _scrollController,
                 child: Container(
-                  constraints: const BoxConstraints(maxWidth: 672), // max-w-2xl
+                  constraints: const BoxConstraints(maxWidth: 672),
                   padding: const EdgeInsets.all(24),
                   child: Column(
                     children: [
-                      const SizedBox(height: 40), // Top spacing
+                      const SizedBox(height: 40),
                       ...List.generate(_currentLine + 1, (index) {
                         if (index >= _storyLines.length) return const SizedBox.shrink();
                         final line = _storyLines[index];
@@ -135,22 +224,34 @@ class _OpeningScreenState extends State<OpeningScreen>
                           tween: Tween(begin: 0.0, end: 1.0),
                           duration: const Duration(seconds: 1),
                           builder: (context, value, child) {
-                            return Opacity(
-                              opacity: value,
-                              child: child,
+                            return Transform.scale(
+                              scale: 0.8 + (value * 0.2),
+                              child: Opacity(
+                                opacity: value,
+                                child: child,
+                              ),
                             );
                           },
                           child: Container(
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
+                              borderRadius: BorderRadius.circular(30),
                               gradient: const LinearGradient(
-                                colors: [Color(0xFFFF00CC), Color(0xFFD500F9)], // Brighter Pink to Vivid Purple
+                                colors: [
+                                  Color(0xFFFF0080), // Hot Pink
+                                  Color(0xFFFF00FF), // Magenta
+                                  Color(0xFF00D9FF), // Cyan
+                                ],
                               ),
                               boxShadow: [
                                 BoxShadow(
-                                  color: const Color(0xFFFF00FF).withValues(alpha: 0.8),
-                                  blurRadius: 30,
+                                  color: const Color(0xFFFF00FF).withValues(alpha: 0.6),
+                                  blurRadius: 20,
                                   spreadRadius: 2,
+                                ),
+                                BoxShadow(
+                                  color: const Color(0xFF00D9FF).withValues(alpha: 0.4),
+                                  blurRadius: 30,
+                                  spreadRadius: 4,
                                 ),
                               ],
                             ),
@@ -160,30 +261,33 @@ class _OpeningScreenState extends State<OpeningScreen>
                                 backgroundColor: Colors.transparent,
                                 shadowColor: Colors.transparent,
                                 padding: const EdgeInsets.symmetric(
-                                    horizontal: 32, vertical: 16),
+                                    horizontal: 40, vertical: 18),
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
+                                  borderRadius: BorderRadius.circular(30),
                                 ),
                               ),
-                              child: const Row(
+                              child: Row(
                                 mainAxisSize: MainAxisSize.min,
-                                children: [
+                                children: const [
+                                  Icon(Icons.favorite, color: Colors.white, size: 20),
+                                  SizedBox(width: 12),
                                   Text(
                                     '運命を受け入れる',
                                     style: TextStyle(
                                       fontSize: 18,
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,
+                                      letterSpacing: 1,
                                     ),
                                   ),
-                                  SizedBox(width: 8),
-                                  Icon(Icons.chevron_right, color: Colors.white),
+                                  SizedBox(width: 12),
+                                  Icon(Icons.auto_awesome, color: Colors.white, size: 20),
                                 ],
                               ),
                             ),
                           ),
                         ),
-                        const SizedBox(height: 40), // Bottom spacing
+                        const SizedBox(height: 40),
                       ],
                     ],
                   ),
@@ -199,9 +303,17 @@ class _OpeningScreenState extends State<OpeningScreen>
             child: TextButton(
               onPressed: widget.onComplete,
               style: TextButton.styleFrom(
-                foregroundColor: Colors.grey[600],
+                foregroundColor: const Color(0xFF00D9FF),
+                backgroundColor: Colors.black.withValues(alpha: 0.3),
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               ),
-              child: const Text('スキップ >>'),
+              child: const Text(
+                'スキップ >>',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
             ),
           ),
         ],
@@ -210,21 +322,21 @@ class _OpeningScreenState extends State<OpeningScreen>
   }
 
   Widget _buildLine(String line, int index) {
-    // Animation for each line
     return TweenAnimationBuilder<double>(
       tween: Tween(begin: 0.0, end: 1.0),
-      duration: const Duration(seconds: 1),
+      duration: const Duration(milliseconds: 800),
+      curve: Curves.easeOut,
       builder: (context, value, child) {
         return Opacity(
           opacity: value,
           child: Transform.translate(
-            offset: Offset(0, 10 * (1 - value)),
+            offset: Offset(0, 20 * (1 - value)),
             child: child,
           ),
         );
       },
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 4),
+        padding: const EdgeInsets.symmetric(vertical: 6),
         child: line.isEmpty
             ? const SizedBox(height: 16)
             : _styledText(line, index),
@@ -234,51 +346,62 @@ class _OpeningScreenState extends State<OpeningScreen>
 
   Widget _styledText(String line, int index) {
     if (index == 0) {
-      // Glitch text effect approximation
+      // Title
       return Text(
         line,
         textAlign: TextAlign.center,
         style: const TextStyle(
-          fontSize: 32, // md:text-5xl approx
-          color: Color(0xFFFF40FF), // Brighter Pink
-          letterSpacing: 3.2, // 0.1em
+          fontSize: 36,
+          color: Color(0xFF00D9FF), // Bright Cyan
+          letterSpacing: 4,
           fontWeight: FontWeight.bold,
           shadows: [
             Shadow(
+              color: Color(0xFF00D9FF),
+              blurRadius: 20,
+            ),
+            Shadow(
               color: Color(0xFFFF00FF),
-              blurRadius: 10,
-              offset: Offset(0, 0),
-            ),
-            Shadow(
-              color: Color(0xFF00FFFF), // Cyan glitch
-              blurRadius: 10,
-              offset: Offset(-2, 0),
-            ),
-            Shadow(
-              color: Color(0xFFFF0080), // Red-Pink glitch
-              blurRadius: 10,
-              offset: Offset(2, 0),
+              blurRadius: 30,
             ),
           ],
         ),
       );
     } else if (line == '「彼女たち」') {
-      return Text(
-        line,
-        textAlign: TextAlign.center,
-        style: const TextStyle(
-          fontSize: 24, // md:text-3xl
-          color: Color(0xFFFF66FF), // Brighter Pink
-          shadows: [
-            Shadow(
-              color: Color(0xFFFF00FF),
-              blurRadius: 20,
-            ),
-            Shadow(
-              color: Color(0xFFFF00FF),
-              blurRadius: 40,
-            ),
-          ],
+      // Special highlight
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              const Color(0xFFFF0080).withValues(alpha: 0.3),
+              const Color(0xFFFF00FF).withValues(alpha: 0.3),
+            ],
+          ),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: const Color(0xFFFF00FF).withValues(alpha: 0.6),
+            width: 2,
+          ),
+        ),
+        child: Text(
+          line,
+          textAlign: TextAlign.center,
+          style: const TextStyle(
+            fontSize: 28,
+            color: Color(0xFFFF66FF), // Bright Pink
+            fontWeight: FontWeight.bold,
+            shadows: [
+              Shadow(
+                color: Color(0xFFFF00FF),
+                blurRadius: 15,
+              ),
+              Shadow(
+                color: Color(0xFFFF0080),
+                blurRadius: 25,
+              ),
+            ],
+          ),
         ),
       );
     } else if (line.contains('マスター')) {
@@ -286,12 +409,13 @@ class _OpeningScreenState extends State<OpeningScreen>
         line,
         textAlign: TextAlign.center,
         style: const TextStyle(
-          fontSize: 20, // md:text-2xl
-          color: Color(0xFF00FFFF),
+          fontSize: 20,
+          color: Color(0xFF00FFFF), // Cyan
+          fontWeight: FontWeight.w600,
           shadows: [
             Shadow(
-              color: Color(0xFF00FFFF),
-              blurRadius: 8,
+              color: Color(0xFF00D9FF),
+              blurRadius: 12,
             ),
           ],
         ),
@@ -300,74 +424,67 @@ class _OpeningScreenState extends State<OpeningScreen>
       return Text(
         line,
         textAlign: TextAlign.center,
-        style: TextStyle(
-          fontSize: 16, // md:text-lg
-          color: Colors.grey[300],
+        style: const TextStyle(
+          fontSize: 16,
+          color: Colors.white,
+          height: 1.6,
+          shadows: [
+            Shadow(
+              color: Colors.black45,
+              blurRadius: 4,
+            ),
+          ],
         ),
       );
     }
   }
 }
 
-class GridPainter extends CustomPainter {
-  final double offset;
+class BubbleData {
+  final double x;
+  final double y;
+  final double size;
+  final double speed;
+  final double delay;
 
-  GridPainter({required this.offset});
+  BubbleData({
+    required this.x,
+    required this.y,
+    required this.size,
+    required this.speed,
+    required this.delay,
+  });
+}
 
+class EarthPatternPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = const Color(0xFFFF00FF).withValues(alpha: 0.8) // Brighter grid
-      ..strokeWidth = 1.5
-      ..maskFilter = const MaskFilter.blur(BlurStyle.solid, 2) // Glow effect
+      ..color = const Color(0xFF00D9FF).withValues(alpha: 0.3)
+      ..strokeWidth = 2
       ..style = PaintingStyle.stroke;
 
-    const gridSize = 50.0;
-    
-    // We need to draw a grid that covers the screen plus some extra for the perspective transform
-    // Since we are transforming the parent, the canvas size here is effectively infinite or whatever the parent allows.
-    // But for performance, we should limit it.
-    // However, since we use Size.infinite in CustomPaint, we need to pick a reasonable area to draw.
-    // Let's draw enough to cover the view.
-    
-    // Actually, because of the perspective transform, the "top" of the grid is far away and small.
-    // We should draw a large area centered on the screen.
-    
-    final centerX = size.width / 2;
-    final centerY = size.height / 2;
-    
-    // Draw vertical lines
-    // We want them to be static horizontally relative to the grid, but the grid itself is static?
-    // The React code says: background-image ... linear-gradient(90deg, ...)
-    // And animation moves it.
-    // Wait, the React animation is `gridMove` which translates Z.
-    // In CSS 3D, translating Z moves the plane towards the camera.
-    // In our case, we can simulate movement by shifting the horizontal lines (which represent depth) downwards.
-    
-    // Vertical lines (converging to vanishing point in perspective, but parallel in 2D before transform)
-    for (double x = -1000; x <= 1000; x += gridSize) {
+    // Draw latitude lines
+    for (int i = 1; i < 5; i++) {
+      final y = (size.height / 5) * i;
       canvas.drawLine(
-        Offset(centerX + x, -1000),
-        Offset(centerX + x, 1000),
+        Offset(0, y),
+        Offset(size.width, y),
         paint,
       );
     }
 
-    // Horizontal lines (moving towards viewer)
-    // The offset goes from 0 to 1.
-    // We shift all horizontal lines by offset * gridSize.
-    final shift = offset * gridSize;
-    
-    for (double y = -1000; y <= 1000; y += gridSize) {
-      final dy = y + shift;
+    // Draw longitude lines
+    for (int i = 1; i < 5; i++) {
+      final x = (size.width / 5) * i;
       canvas.drawLine(
-        Offset(-1000, centerY + dy),
-        Offset(1000, centerY + dy),
+        Offset(x, 0),
+        Offset(x, size.height),
         paint,
       );
     }
   }
 
   @override
-  bool shouldRepaint(GridPainter oldDelegate) => oldDelegate.offset != offset;
+  bool shouldRepaint(EarthPatternPainter oldDelegate) => false;
 }

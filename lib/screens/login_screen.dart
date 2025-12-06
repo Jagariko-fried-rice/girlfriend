@@ -39,7 +39,7 @@ class _LoginScreenState extends State<LoginScreen>
   final _sleepController = TextEditingController();
 
   final _random = Random();
-  final int _particleCount = 20;
+  final int _particleCount = 25;
   late final List<_ParticleInfo> _particles;
 
   @override
@@ -52,10 +52,13 @@ class _LoginScreenState extends State<LoginScreen>
       return _ParticleInfo(
         left: _random.nextDouble(),
         top: _random.nextDouble(),
-        size: 2 + _random.nextDouble() * 4,
+        size: 3 + _random.nextDouble() * 6,
         delay: _random.nextDouble() * 2,
         speed: 3 + _random.nextDouble() * 4,
-        opacity: 0.3 + _random.nextDouble() * 0.7,
+        opacity: 0.4 + _random.nextDouble() * 0.6,
+        color: _random.nextBool()
+            ? const Color(0xFF00D9FF)
+            : const Color(0xFFFF00FF),
       );
     });
   }
@@ -74,11 +77,12 @@ class _LoginScreenState extends State<LoginScreen>
       context: context,
       initialTime: _sleepTime,
     );
-    if (newTime != null)
+    if (newTime != null) {
       setState(() {
         _sleepTime = newTime;
         _sleepController.text = _sleepTime.format(context);
       });
+    }
   }
 
   void _submit() {
@@ -92,9 +96,11 @@ class _LoginScreenState extends State<LoginScreen>
 
       if (widget.onComplete != null) widget.onComplete!(data);
 
-      // For demo: show snackbar
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Logged in: ${data.name} • ${data.sleepTime}')),
+        SnackBar(
+          content: Text('ようこそ、${data.name}さん！ ✨'),
+          backgroundColor: const Color(0xFFFF00FF),
+        ),
       );
     }
   }
@@ -109,13 +115,18 @@ class _LoginScreenState extends State<LoginScreen>
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [Color(0xFF4A0E62), Colors.black, Color(0xFF29004C)], // Brighter Purple Gradient
-            stops: [0.0, 0.5, 1.0],
+            colors: [
+              Color(0xFF0A4D8C), // Deep Blue
+              Color(0xFF1E3A8A), // Royal Blue
+              Color(0xFF4C1D95), // Purple
+              Color(0xFF831843), // Deep Pink
+            ],
+            stops: [0.0, 0.3, 0.7, 1.0],
           ),
         ),
         child: Stack(
           children: [
-            // Particles
+            // Animated Particles (Stars/Sparkles)
             ..._particles.map(
               (p) => Positioned(
                 left: p.left * MediaQuery.of(context).size.width,
@@ -125,6 +136,7 @@ class _LoginScreenState extends State<LoginScreen>
                   delay: p.delay,
                   speed: p.speed,
                   opacity: p.opacity,
+                  color: p.color,
                 ),
               ),
             ),
@@ -140,69 +152,102 @@ class _LoginScreenState extends State<LoginScreen>
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      // Logo / Title
                       const SizedBox(height: 12),
+                      // Logo / Title with cute icons
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: const [
                           Icon(
+                            Icons.favorite,
+                            color: Color(0xFFFF0080),
+                            size: 32,
+                          ),
+                          SizedBox(width: 8),
+                          Icon(
                             Icons.nightlight_round,
-                            color: Color(0xFFFF7BA9),
+                            color: Color(0xFF00D9FF),
                             size: 44,
                           ),
                           SizedBox(width: 8),
                           Icon(
-                            Icons.auto_fix_high,
-                            color: Color(0xFF00EDFF),
+                            Icons.auto_awesome,
+                            color: Color(0xFFFF00FF),
                             size: 28,
                           ),
                         ],
                       ),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: 16),
                       const Text(
                         '彼女の人生',
                         style: TextStyle(
-                          fontSize: 38,
+                          fontSize: 42,
                           fontWeight: FontWeight.bold,
-                          color: Color(0xFFFF40FF), // Brighter Pink
+                          color: Color(0xFFFF66FF),
                           shadows: [
-                            Shadow(blurRadius: 10, color: Color(0xFFFF00FF)),
-                            Shadow(blurRadius: 30, color: Color(0xFFD500F9)),
+                            Shadow(blurRadius: 15, color: Color(0xFFFF00FF)),
+                            Shadow(blurRadius: 30, color: Color(0xFF00D9FF)),
                           ],
                         ),
                       ),
-                      const SizedBox(height: 6),
-                      const Text(
-                        'Virtual Life Simulator',
-                        style: TextStyle(
-                          color: Color(0xFF00EDFF),
-                          fontSize: 14,
+                      const SizedBox(height: 8),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 6,
+                        ),
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            colors: [
+                              Color(0xFF00D9FF),
+                              Color(0xFFFF00FF),
+                            ],
+                          ),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: const Text(
+                          'Virtual Life Simulator',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 1,
+                          ),
                         ),
                       ),
                       const SizedBox(height: 6),
                       const Text(
-                        'Ver 5.0.XX - AI Partner System',
-                        style: TextStyle(color: Colors.white54, fontSize: 12),
+                        'Ver 5.0.XX - AI Partner System ✨',
+                        style: TextStyle(
+                          color: Color(0xFF00D9FF),
+                          fontSize: 12,
+                        ),
                       ),
-                      const SizedBox(height: 18),
+                      const SizedBox(height: 24),
 
                       // Form Card
                       ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(20),
                         child: BackdropFilter(
-                          filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
+                          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                           child: Container(
-                            padding: const EdgeInsets.all(18),
+                            padding: const EdgeInsets.all(24),
                             decoration: BoxDecoration(
-                              color: const Color.fromRGBO(26, 10, 46, 0.78),
-                              borderRadius: BorderRadius.circular(12),
+                              color: Colors.white.withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(20),
                               border: Border.all(
-                                color: Colors.purple.withValues(alpha: 0.4),
+                                color: const Color(0xFFFF00FF).withValues(alpha: 0.5),
+                                width: 2,
                               ),
-                              boxShadow: const [
+                              boxShadow: [
                                 BoxShadow(
-                                  color: Color(0x50FF00FF), // Stronger glow
+                                  color: const Color(0xFFFF00FF).withValues(alpha: 0.3),
                                   blurRadius: 30,
+                                  spreadRadius: 2,
+                                ),
+                                BoxShadow(
+                                  color: const Color(0xFF00D9FF).withValues(alpha: 0.2),
+                                  blurRadius: 40,
+                                  spreadRadius: 4,
                                 ),
                               ],
                             ),
@@ -212,21 +257,26 @@ class _LoginScreenState extends State<LoginScreen>
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
                                   // Name
-                                  const FieldLabel(label: 'マスター名'),
+                                  const FieldLabel(
+                                    label: 'マスター名',
+                                    icon: Icons.person,
+                                  ),
                                   TextFormField(
                                     controller: _nameController,
                                     style: const TextStyle(color: Colors.white),
                                     decoration: _inputDecoration('あなたの名前を入力'),
-                                    validator:
-                                        (val) =>
-                                            (val == null || val.trim().isEmpty)
-                                                ? '必須項目です'
-                                                : null,
+                                    validator: (val) =>
+                                        (val == null || val.trim().isEmpty)
+                                            ? '必須項目です'
+                                            : null,
                                   ),
-                                  const SizedBox(height: 12),
+                                  const SizedBox(height: 16),
 
                                   // Sleep time
-                                  const FieldLabel(label: '推奨睡眠時刻'),
+                                  const FieldLabel(
+                                    label: '推奨睡眠時刻',
+                                    icon: Icons.bedtime,
+                                  ),
                                   GestureDetector(
                                     onTap: _pickTime,
                                     child: AbsorbPointer(
@@ -237,17 +287,15 @@ class _LoginScreenState extends State<LoginScreen>
                                         ),
                                         decoration: _inputDecoration(
                                           '23:00',
-                                          suffix: Icon(
+                                          suffix: const Icon(
                                             Icons.access_time,
-                                            color: Colors.grey[400],
+                                            color: Color(0xFF00D9FF),
                                           ),
                                         ),
-                                        validator:
-                                            (val) =>
-                                                (val == null ||
-                                                        val.trim().isEmpty)
-                                                    ? '必須項目です'
-                                                    : null,
+                                        validator: (val) =>
+                                            (val == null || val.trim().isEmpty)
+                                                ? '必須項目です'
+                                                : null,
                                       ),
                                     ),
                                   ),
@@ -256,17 +304,32 @@ class _LoginScreenState extends State<LoginScreen>
                                       top: 6,
                                       bottom: 6,
                                     ),
-                                    child: Text(
-                                      '睡眠時刻に近いほど理想の彼女に近づきます',
-                                      style: TextStyle(
-                                        color: Colors.grey[400],
-                                        fontSize: 12,
-                                      ),
+                                    child: Row(
+                                      children: const [
+                                        Icon(
+                                          Icons.favorite,
+                                          size: 14,
+                                          color: Color(0xFFFF0080),
+                                        ),
+                                        SizedBox(width: 6),
+                                        Expanded(
+                                          child: Text(
+                                            '睡眠時刻に近いほど理想の彼女に近づきます',
+                                            style: TextStyle(
+                                              color: Color(0xFF00D9FF),
+                                              fontSize: 12,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
 
                                   // Email
-                                  const FieldLabel(label: 'メールアドレス'),
+                                  const FieldLabel(
+                                    label: 'メールアドレス',
+                                    icon: Icons.email,
+                                  ),
                                   TextFormField(
                                     controller: _emailController,
                                     keyboardType: TextInputType.emailAddress,
@@ -275,109 +338,138 @@ class _LoginScreenState extends State<LoginScreen>
                                       'example@email.com',
                                     ),
                                     validator: (val) {
-                                      if (val == null || val.trim().isEmpty)
+                                      if (val == null || val.trim().isEmpty) {
                                         return '必須項目です';
+                                      }
                                       final emailRegex = RegExp(
                                         r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}",
                                       );
-                                      if (!emailRegex.hasMatch(val))
+                                      if (!emailRegex.hasMatch(val)) {
                                         return '有効なメールアドレスを入力してください';
+                                      }
                                       return null;
                                     },
                                   ),
-                                  const SizedBox(height: 12),
+                                  const SizedBox(height: 16),
 
                                   // Age
-                                  const FieldLabel(label: '年齢'),
+                                  const FieldLabel(
+                                    label: '年齢',
+                                    icon: Icons.cake,
+                                  ),
                                   TextFormField(
                                     controller: _ageController,
                                     keyboardType: TextInputType.number,
                                     style: const TextStyle(color: Colors.white),
                                     decoration: _inputDecoration('18'),
                                     validator: (val) {
-                                      if (val == null || val.trim().isEmpty)
+                                      if (val == null || val.trim().isEmpty) {
                                         return '必須項目です';
+                                      }
                                       final n = int.tryParse(val);
-                                      if (n == null || n < 1 || n > 120)
+                                      if (n == null || n < 1 || n > 120) {
                                         return '年齢を正しく入力してください';
+                                      }
                                       return null;
                                     },
                                   ),
 
                                   // Submit
-                                  const SizedBox(height: 18),
-                                  ElevatedButton(
-                                    onPressed: _submit,
-                                    style: ElevatedButton.styleFrom(
-                                      padding: const EdgeInsets.symmetric(
-                                        vertical: 14,
-                                      ),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      shadowColor: const Color(0xFFEA00FF),
-                                      elevation: 8,
-                                      backgroundColor: Colors.transparent,
-                                      // gradient background below
-                                    ),
-                                    child: Ink(
-                                      decoration: BoxDecoration(
-                                        gradient: const LinearGradient(
-                                          colors: [
-                                            Color(0xFFFF00CC), // Brighter Pink
-                                            Color(0xFFD500F9), // Vivid Purple
-                                          ],
-                                        ),
-                                        borderRadius: BorderRadius.circular(10),
-                                        boxShadow: const [
-                                          BoxShadow(
-                                            color: Color(0xAAFF00FF), // Stronger glow
-                                            blurRadius: 25,
-                                            spreadRadius: 2,
-                                          ),
+                                  const SizedBox(height: 24),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(30),
+                                      gradient: const LinearGradient(
+                                        colors: [
+                                          Color(0xFFFF0080),
+                                          Color(0xFFFF00FF),
+                                          Color(0xFF00D9FF),
                                         ],
                                       ),
-                                      child: Container(
-                                        alignment: Alignment.center,
-                                        height: 48,
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: const [
-                                            Icon(
-                                              Icons.auto_fix_high,
-                                              color: Colors.white,
-                                              size: 18,
-                                            ),
-                                            SizedBox(width: 8),
-                                            Text(
-                                              'システムにログイン',
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                            SizedBox(width: 8),
-                                            Icon(
-                                              Icons.auto_fix_high,
-                                              color: Colors.white,
-                                              size: 18,
-                                            ),
-                                          ],
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: const Color(0xFFFF00FF)
+                                              .withValues(alpha: 0.6),
+                                          blurRadius: 20,
+                                          spreadRadius: 2,
                                         ),
+                                      ],
+                                    ),
+                                    child: ElevatedButton(
+                                      onPressed: _submit,
+                                      style: ElevatedButton.styleFrom(
+                                        padding: const EdgeInsets.symmetric(
+                                          vertical: 16,
+                                        ),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(30),
+                                        ),
+                                        backgroundColor: Colors.transparent,
+                                        shadowColor: Colors.transparent,
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: const [
+                                          Icon(
+                                            Icons.auto_awesome,
+                                            color: Colors.white,
+                                            size: 20,
+                                          ),
+                                          SizedBox(width: 12),
+                                          Text(
+                                            'システムにログイン',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16,
+                                              letterSpacing: 1,
+                                            ),
+                                          ),
+                                          SizedBox(width: 12),
+                                          Icon(
+                                            Icons.favorite,
+                                            color: Colors.white,
+                                            size: 20,
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ),
 
-                                  // Warning
-                                  const SizedBox(height: 12),
-                                  const Center(
-                                    child: Text(
-                                      'このシステムは睡眠改善を目的としています\n健康的な睡眠習慣を促進します',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        color: Colors.white70,
-                                        fontSize: 12,
+                                  // Info
+                                  const SizedBox(height: 16),
+                                  Center(
+                                    child: Container(
+                                      padding: const EdgeInsets.all(12),
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xFF00D9FF)
+                                            .withValues(alpha: 0.2),
+                                        borderRadius: BorderRadius.circular(12),
+                                        border: Border.all(
+                                          color: const Color(0xFF00D9FF)
+                                              .withValues(alpha: 0.4),
+                                        ),
+                                      ),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: const [
+                                          Icon(
+                                            Icons.info_outline,
+                                            color: Color(0xFF00D9FF),
+                                            size: 16,
+                                          ),
+                                          SizedBox(width: 8),
+                                          Flexible(
+                                            child: Text(
+                                              'このシステムは睡眠改善を目的としています',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 12,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ),
@@ -402,44 +494,79 @@ class _LoginScreenState extends State<LoginScreen>
 InputDecoration _inputDecoration(String placeholder, {Widget? suffix}) {
   return InputDecoration(
     hintText: placeholder,
-    hintStyle: const TextStyle(color: Colors.white54),
+    hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.5)),
     filled: true,
-    fillColor: Colors.black45,
-    contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+    fillColor: Colors.white.withValues(alpha: 0.1),
+    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
     enabledBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(8),
-      borderSide: BorderSide(color: Colors.purple.withValues(alpha: 0.6)),
+      borderRadius: BorderRadius.circular(12),
+      borderSide: BorderSide(
+        color: const Color(0xFF00D9FF).withValues(alpha: 0.4),
+        width: 2,
+      ),
     ),
     focusedBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(8),
-      borderSide: const BorderSide(color: Color(0xFFFF40FF), width: 2), // Brighter Pink border
+      borderRadius: BorderRadius.circular(12),
+      borderSide: const BorderSide(
+        color: Color(0xFFFF00FF),
+        width: 2,
+      ),
     ),
-    suffixIcon:
-        suffix != null
-            ? Padding(padding: const EdgeInsets.only(right: 12), child: suffix)
-            : null,
+    errorBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(12),
+      borderSide: const BorderSide(
+        color: Color(0xFFFF0080),
+        width: 2,
+      ),
+    ),
+    focusedErrorBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(12),
+      borderSide: const BorderSide(
+        color: Color(0xFFFF0080),
+        width: 2,
+      ),
+    ),
+    suffixIcon: suffix != null
+        ? Padding(padding: const EdgeInsets.only(right: 12), child: suffix)
+        : null,
   );
 }
 
 class FieldLabel extends StatelessWidget {
   final String label;
-  const FieldLabel({Key? key, required this.label}) : super(key: key);
+  final IconData icon;
+  const FieldLabel({Key? key, required this.label, required this.icon})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 6),
+      padding: const EdgeInsets.only(bottom: 8),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          Icon(
+            icon,
+            size: 16,
+            color: const Color(0xFF00D9FF),
+          ),
+          const SizedBox(width: 8),
           Text(
             label,
-            style: const TextStyle(color: Color(0xFF00EDFF), fontSize: 13),
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+            ),
           ),
           const SizedBox(width: 6),
           const Text(
             '*',
-            style: TextStyle(color: Color(0xFFFF40FF), fontSize: 13),
+            style: TextStyle(
+              color: Color(0xFFFF0080),
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ],
       ),
@@ -454,6 +581,7 @@ class _ParticleInfo {
   final double delay;
   final double speed;
   final double opacity;
+  final Color color;
 
   _ParticleInfo({
     required this.left,
@@ -462,15 +590,16 @@ class _ParticleInfo {
     required this.delay,
     required this.speed,
     required this.opacity,
+    required this.color,
   });
 }
 
 class AnimatedParticle extends StatefulWidget {
-  // left/topを削除
   final double size;
   final double delay;
   final double speed;
   final double opacity;
+  final Color color;
 
   const AnimatedParticle({
     Key? key,
@@ -478,6 +607,7 @@ class AnimatedParticle extends StatefulWidget {
     required this.delay,
     required this.speed,
     required this.opacity,
+    required this.color,
   }) : super(key: key);
 
   @override
@@ -497,8 +627,8 @@ class _AnimatedParticleState extends State<AnimatedParticle>
       duration: Duration(milliseconds: (widget.speed * 1000).toInt()),
     );
     _anim = Tween<double>(
-      begin: -6,
-      end: 6,
+      begin: -8,
+      end: 8,
     ).chain(CurveTween(curve: Curves.easeInOut)).animate(_controller);
     Future.delayed(Duration(milliseconds: (widget.delay * 1000).toInt()), () {
       if (mounted) _controller.repeat(reverse: true);
@@ -523,9 +653,15 @@ class _AnimatedParticleState extends State<AnimatedParticle>
             child: Container(
               width: widget.size,
               height: widget.size,
-              decoration: const BoxDecoration(
-                color: Color(0xFF00EDFF),
+              decoration: BoxDecoration(
+                color: widget.color,
                 shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: widget.color.withValues(alpha: 0.6),
+                    blurRadius: widget.size * 2,
+                  ),
+                ],
               ),
             ),
           ),
