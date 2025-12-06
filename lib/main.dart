@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'screens/login_screen.dart';
 import 'screens/opening_screen.dart';
 import 'screens/girlfriend_setup_screen.dart';
+import 'providers/providers.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -23,53 +25,37 @@ class MyApp extends StatelessWidget {
   }
 }
 
-enum AppStage { opening, login, setup, home }
-
-class AppFlow extends StatefulWidget {
+class AppFlow extends ConsumerWidget {
   const AppFlow({super.key});
 
   @override
-  State<AppFlow> createState() => _AppFlowState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final stage = ref.watch(appStateNotifierProvider);
 
-class _AppFlowState extends State<AppFlow> {
-  AppStage _stage = AppStage.opening;
-
-  @override
-  Widget build(BuildContext context) {
-    switch (_stage) {
+    switch (stage) {
       case AppStage.opening:
         return OpeningScreen(
           onComplete: () {
-            setState(() {
-              _stage = AppStage.login;
-            });
+            ref.read(appStateNotifierProvider.notifier).moveToLogin();
           },
         );
       case AppStage.login:
         return LoginScreen(
           onComplete: (data) {
             debugPrint('Login completed: $data');
-            setState(() {
-              _stage = AppStage.setup;
-            });
+            ref.read(appStateNotifierProvider.notifier).moveToSetup();
           },
         );
       case AppStage.setup:
         return GirlfriendSetupScreen(
           onComplete: (config) {
             debugPrint('Setup completed: $config');
-            // Navigate to home or next screen
-            setState(() {
-              _stage = AppStage.home;
-            });
+            ref.read(appStateNotifierProvider.notifier).moveToHome();
           },
         );
       case AppStage.home:
         return const Scaffold(
-          body: Center(
-            child: Text('Home Screen (To be implemented)'),
-          ),
+          body: Center(child: Text('Home Screen (To be implemented)')),
         );
     }
   }

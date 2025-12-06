@@ -2,6 +2,9 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../models/user.dart';
+import '../providers/providers.dart';
 
 class LoginData {
   final String name;
@@ -21,15 +24,15 @@ class LoginData {
       'LoginData(name: $name, sleepTime: $sleepTime, email: $email, age: $age)';
 }
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends ConsumerStatefulWidget {
   final void Function(LoginData data)? onComplete;
   const LoginScreen({Key? key, this.onComplete}) : super(key: key);
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen>
+class _LoginScreenState extends ConsumerState<LoginScreen>
     with SingleTickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
@@ -56,9 +59,10 @@ class _LoginScreenState extends State<LoginScreen>
         delay: _random.nextDouble() * 2,
         speed: 3 + _random.nextDouble() * 4,
         opacity: 0.4 + _random.nextDouble() * 0.6,
-        color: _random.nextBool()
-            ? const Color(0xFF00D9FF)
-            : const Color(0xFFFF00FF),
+        color:
+            _random.nextBool()
+                ? const Color(0xFF00D9FF)
+                : const Color(0xFFFF00FF),
       );
     });
   }
@@ -93,6 +97,17 @@ class _LoginScreenState extends State<LoginScreen>
         email: _emailController.text.trim(),
         age: _ageController.text.trim(),
       );
+
+      // Riverpod で User を保存
+      final user = User(
+        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        name: data.name,
+        email: data.email,
+        age: int.tryParse(data.age) ?? 20,
+        sleepTime: data.sleepTime,
+        createdAt: DateTime.now(),
+      );
+      ref.read(userNotifierProvider.notifier).setUser(user);
 
       if (widget.onComplete != null) widget.onComplete!(data);
 
@@ -197,10 +212,7 @@ class _LoginScreenState extends State<LoginScreen>
                         ),
                         decoration: BoxDecoration(
                           gradient: const LinearGradient(
-                            colors: [
-                              Color(0xFF00D9FF),
-                              Color(0xFFFF00FF),
-                            ],
+                            colors: [Color(0xFF00D9FF), Color(0xFFFF00FF)],
                           ),
                           borderRadius: BorderRadius.circular(20),
                         ),
@@ -235,17 +247,23 @@ class _LoginScreenState extends State<LoginScreen>
                               color: Colors.white.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(20),
                               border: Border.all(
-                                color: const Color(0xFFFF00FF).withValues(alpha: 0.5),
+                                color: const Color(
+                                  0xFFFF00FF,
+                                ).withValues(alpha: 0.5),
                                 width: 2,
                               ),
                               boxShadow: [
                                 BoxShadow(
-                                  color: const Color(0xFFFF00FF).withValues(alpha: 0.3),
+                                  color: const Color(
+                                    0xFFFF00FF,
+                                  ).withValues(alpha: 0.3),
                                   blurRadius: 30,
                                   spreadRadius: 2,
                                 ),
                                 BoxShadow(
-                                  color: const Color(0xFF00D9FF).withValues(alpha: 0.2),
+                                  color: const Color(
+                                    0xFF00D9FF,
+                                  ).withValues(alpha: 0.2),
                                   blurRadius: 40,
                                   spreadRadius: 4,
                                 ),
@@ -265,10 +283,11 @@ class _LoginScreenState extends State<LoginScreen>
                                     controller: _nameController,
                                     style: const TextStyle(color: Colors.white),
                                     decoration: _inputDecoration('あなたの名前を入力'),
-                                    validator: (val) =>
-                                        (val == null || val.trim().isEmpty)
-                                            ? '必須項目です'
-                                            : null,
+                                    validator:
+                                        (val) =>
+                                            (val == null || val.trim().isEmpty)
+                                                ? '必須項目です'
+                                                : null,
                                   ),
                                   const SizedBox(height: 16),
 
@@ -292,10 +311,12 @@ class _LoginScreenState extends State<LoginScreen>
                                             color: Color(0xFF00D9FF),
                                           ),
                                         ),
-                                        validator: (val) =>
-                                            (val == null || val.trim().isEmpty)
-                                                ? '必須項目です'
-                                                : null,
+                                        validator:
+                                            (val) =>
+                                                (val == null ||
+                                                        val.trim().isEmpty)
+                                                    ? '必須項目です'
+                                                    : null,
                                       ),
                                     ),
                                   ),
@@ -388,8 +409,9 @@ class _LoginScreenState extends State<LoginScreen>
                                       ),
                                       boxShadow: [
                                         BoxShadow(
-                                          color: const Color(0xFFFF00FF)
-                                              .withValues(alpha: 0.6),
+                                          color: const Color(
+                                            0xFFFF00FF,
+                                          ).withValues(alpha: 0.6),
                                           blurRadius: 20,
                                           spreadRadius: 2,
                                         ),
@@ -402,13 +424,16 @@ class _LoginScreenState extends State<LoginScreen>
                                           vertical: 16,
                                         ),
                                         shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(30),
+                                          borderRadius: BorderRadius.circular(
+                                            30,
+                                          ),
                                         ),
                                         backgroundColor: Colors.transparent,
                                         shadowColor: Colors.transparent,
                                       ),
                                       child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         children: const [
                                           Icon(
                                             Icons.auto_awesome,
@@ -442,12 +467,14 @@ class _LoginScreenState extends State<LoginScreen>
                                     child: Container(
                                       padding: const EdgeInsets.all(12),
                                       decoration: BoxDecoration(
-                                        color: const Color(0xFF00D9FF)
-                                            .withValues(alpha: 0.2),
+                                        color: const Color(
+                                          0xFF00D9FF,
+                                        ).withValues(alpha: 0.2),
                                         borderRadius: BorderRadius.circular(12),
                                         border: Border.all(
-                                          color: const Color(0xFF00D9FF)
-                                              .withValues(alpha: 0.4),
+                                          color: const Color(
+                                            0xFF00D9FF,
+                                          ).withValues(alpha: 0.4),
                                         ),
                                       ),
                                       child: Row(
@@ -507,28 +534,20 @@ InputDecoration _inputDecoration(String placeholder, {Widget? suffix}) {
     ),
     focusedBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(12),
-      borderSide: const BorderSide(
-        color: Color(0xFFFF00FF),
-        width: 2,
-      ),
+      borderSide: const BorderSide(color: Color(0xFFFF00FF), width: 2),
     ),
     errorBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(12),
-      borderSide: const BorderSide(
-        color: Color(0xFFFF0080),
-        width: 2,
-      ),
+      borderSide: const BorderSide(color: Color(0xFFFF0080), width: 2),
     ),
     focusedErrorBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(12),
-      borderSide: const BorderSide(
-        color: Color(0xFFFF0080),
-        width: 2,
-      ),
+      borderSide: const BorderSide(color: Color(0xFFFF0080), width: 2),
     ),
-    suffixIcon: suffix != null
-        ? Padding(padding: const EdgeInsets.only(right: 12), child: suffix)
-        : null,
+    suffixIcon:
+        suffix != null
+            ? Padding(padding: const EdgeInsets.only(right: 12), child: suffix)
+            : null,
   );
 }
 
@@ -536,7 +555,7 @@ class FieldLabel extends StatelessWidget {
   final String label;
   final IconData icon;
   const FieldLabel({Key? key, required this.label, required this.icon})
-      : super(key: key);
+    : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -545,11 +564,7 @@ class FieldLabel extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Icon(
-            icon,
-            size: 16,
-            color: const Color(0xFF00D9FF),
-          ),
+          Icon(icon, size: 16, color: const Color(0xFF00D9FF)),
           const SizedBox(width: 8),
           Text(
             label,
