@@ -117,23 +117,14 @@ class _LoginScreenState extends State<LoginScreen>
           children: [
             // Particles
             ..._particles.map(
-              (p) => Positioned.fill(
-                child: FractionalTranslation(
-                  translation: Offset(0, 0),
-                  child: LayoutBuilder(
-                    builder: (context, constraints) {
-                      final left = p.left * constraints.maxWidth;
-                      final top = p.top * constraints.maxHeight;
-                      return AnimatedParticle(
-                        left: left,
-                        top: top,
-                        size: p.size,
-                        delay: p.delay,
-                        speed: p.speed,
-                        opacity: p.opacity,
-                      );
-                    },
-                  ),
+              (p) => Positioned(
+                left: p.left * MediaQuery.of(context).size.width,
+                top: p.top * MediaQuery.of(context).size.height,
+                child: AnimatedParticle(
+                  size: p.size,
+                  delay: p.delay,
+                  speed: p.speed,
+                  opacity: p.opacity,
                 ),
               ),
             ),
@@ -475,8 +466,7 @@ class _ParticleInfo {
 }
 
 class AnimatedParticle extends StatefulWidget {
-  final double left;
-  final double top;
+  // left/topを削除
   final double size;
   final double delay;
   final double speed;
@@ -484,8 +474,6 @@ class AnimatedParticle extends StatefulWidget {
 
   const AnimatedParticle({
     Key? key,
-    required this.left,
-    required this.top,
     required this.size,
     required this.delay,
     required this.speed,
@@ -528,9 +516,8 @@ class _AnimatedParticleState extends State<AnimatedParticle>
     return AnimatedBuilder(
       animation: _controller,
       builder: (context, child) {
-        return Positioned(
-          left: widget.left,
-          top: widget.top + _anim.value,
+        return Transform.translate(
+          offset: Offset(0, _anim.value),
           child: Opacity(
             opacity: widget.opacity,
             child: Container(
