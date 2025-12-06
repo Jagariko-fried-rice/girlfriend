@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../models/story_segment.dart';
 import 'girlfriend_setup_screen.dart';
 
@@ -229,122 +230,203 @@ class LifeMemoryScreen extends StatelessWidget {
           builder: (context, scrollController) {
             final pageController = PageController(initialPage: startIndex);
             int currentIndex = startIndex;
-            return StatefulBuilder(builder: (context, setState) {
-              return SizedBox(
-                height: MediaQuery.of(context).size.height * 0.85,
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          IconButton(
-                            onPressed: currentIndex > 0
-                                ? () async {
-                                    await pageController.previousPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-                                  }
-                                : null,
-                            icon: const Icon(Icons.arrow_back_ios),
-                            color: currentIndex > 0 ? const Color(0xFFB91C1C) : Colors.grey,
-                          ),
-                          Text('${currentIndex + 1}/${storySegments.length}', style: const TextStyle(color: Color(0xFFB91C1C))),
-                          IconButton(
-                            onPressed: currentIndex < storySegments.length - 1
-                                ? () async {
-                                    await pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-                                  }
-                                : null,
-                            icon: const Icon(Icons.arrow_forward_ios),
-                            color: currentIndex < storySegments.length - 1 ? const Color(0xFFB91C1C) : Colors.grey,
-                          ),
-                        ],
+            return StatefulBuilder(
+              builder: (context, setState) {
+                return SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.85,
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            IconButton(
+                              onPressed:
+                                  currentIndex > 0
+                                      ? () async {
+                                        await pageController.previousPage(
+                                          duration: const Duration(
+                                            milliseconds: 300,
+                                          ),
+                                          curve: Curves.easeInOut,
+                                        );
+                                      }
+                                      : null,
+                              icon: const Icon(Icons.arrow_back_ios),
+                              color:
+                                  currentIndex > 0
+                                      ? const Color(0xFFB91C1C)
+                                      : Colors.grey,
+                            ),
+                            Text(
+                              '${currentIndex + 1}/${storySegments.length}',
+                              style: const TextStyle(color: Color(0xFFB91C1C)),
+                            ),
+                            IconButton(
+                              onPressed:
+                                  currentIndex < storySegments.length - 1
+                                      ? () async {
+                                        await pageController.nextPage(
+                                          duration: const Duration(
+                                            milliseconds: 300,
+                                          ),
+                                          curve: Curves.easeInOut,
+                                        );
+                                      }
+                                      : null,
+                              icon: const Icon(Icons.arrow_forward_ios),
+                              color:
+                                  currentIndex < storySegments.length - 1
+                                      ? const Color(0xFFB91C1C)
+                                      : Colors.grey,
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    Expanded(
-                      child: PageView.builder(
-                        controller: pageController,
-                        itemCount: storySegments.length,
-                        onPageChanged: (i) => setState(() => currentIndex = i),
-                        itemBuilder: (context, index) {
-                          final segment = storySegments[index];
-                          return SingleChildScrollView(
-                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Container(
-                                  width: 72,
-                                  height: 72,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    gradient: LinearGradient(
-                                      colors: [accentColor, Colors.pink.shade200],
-                                      begin: Alignment.topLeft,
-                                      end: Alignment.bottomRight,
-                                    ),
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      segment.imageEmoji,
-                                      style: const TextStyle(fontSize: 36),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(height: 12),
-                                Text(
-                                  segment.title,
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.bold,
-                                    color: Color(0xFFB91C1C),
-                                  ),
-                                ),
-                                const SizedBox(height: 6),
-                                Text(
-                                  '${segment.age}歳',
-                                  style: const TextStyle(color: Color(0xFFB91C1C)),
-                                ),
-                                const SizedBox(height: 12),
-                                Text(
-                                  segment.description,
-                                  style: const TextStyle(fontSize: 16, color: Color(0xFF4C1D95)),
-                                ),
-                                const SizedBox(height: 20),
-                                SizedBox(
-                                  width: double.infinity,
-                                  child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: accentColor,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(12),
+                      Expanded(
+                        child: PageView.builder(
+                          controller: pageController,
+                          itemCount: storySegments.length,
+                          onPageChanged:
+                              (i) => setState(() => currentIndex = i),
+                          itemBuilder: (context, index) {
+                            final segment = storySegments[index];
+                            return SingleChildScrollView(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 20,
+                                vertical: 18,
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    width: 72,
+                                    height: 72,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      gradient: LinearGradient(
+                                        colors: [
+                                          accentColor,
+                                          Colors.pink.shade200,
+                                        ],
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.bottomRight,
                                       ),
                                     ),
-                                    onPressed: () => Navigator.of(ctx).pop(),
-                                    child: const Padding(
-                                      padding: EdgeInsets.symmetric(vertical: 12),
-                                      child: Text('閉じる', style: TextStyle(fontSize: 16)),
+                                    child: Center(
+                                      child: Text(
+                                        segment.imageEmoji,
+                                        style: const TextStyle(fontSize: 36),
+                                      ),
                                     ),
                                   ),
-                                ),
-                                const SizedBox(height: 12),
-                              ],
-                            ),
-                          );
-                        },
+                                  const SizedBox(height: 12),
+                                  Text(
+                                    segment.title,
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.bold,
+                                      color: Color(0xFFB91C1C),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 6),
+                                  Text(
+                                    '${segment.age}歳',
+                                    style: const TextStyle(
+                                      color: Color(0xFFB91C1C),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 12),
+                                  Text(
+                                    segment.description,
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      color: Color(0xFF4C1D95),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 20),
+
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: OutlinedButton(
+                                          style: OutlinedButton.styleFrom(
+                                            side: const BorderSide(color: Color(0xFFFFB6C1)),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(10),
+                                            ),
+                                          ),
+                                          onPressed: () {
+                                            // 一覧へ戻る：モーダルを閉じる
+                                            Navigator.of(ctx).pop();
+                                          },
+                                          child: const Padding(
+                                            padding: EdgeInsets.symmetric(vertical: 12),
+                                            child: Text('一覧へ戻る', style: TextStyle(color: Color(0xFFB91C1C))),
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 12),
+                                      Expanded(
+                                        child: OutlinedButton(
+                                          style: OutlinedButton.styleFrom(
+                                            backgroundColor: Colors.pink.shade50,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(10),
+                                            ),
+                                          ),
+                                          onPressed: () async {
+                                            final textToShare = '${segment.title}\n${segment.age}歳\n\n${segment.description}';
+                                            await Clipboard.setData(ClipboardData(text: textToShare));
+                                            ScaffoldMessenger.of(ctx).showSnackBar(
+                                              const SnackBar(content: Text('内容をコピーしました。貼り付けて共有してください。')),
+                                            );
+                                          },
+                                          child: const Padding(
+                                            padding: EdgeInsets.symmetric(vertical: 12),
+                                            child: Text('共有', style: TextStyle(color: Color(0xFFB91C1C))),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 12),
+
+                                  SizedBox(
+                                    width: double.infinity,
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: accentColor,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(12),
+                                        ),
+                                      ),
+                                      onPressed: () => Navigator.of(ctx).pop(),
+                                      child: const Padding(
+                                        padding: EdgeInsets.symmetric(vertical: 12),
+                                        child: Text('閉じる', style: TextStyle(fontSize: 16)),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 12),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              );
-            });
+                    ],
+                  ),
+                );
+              },
+            );
           },
         );
       },
     );
   }
-
 
   Widget _buildFooter() {
     return Container(
