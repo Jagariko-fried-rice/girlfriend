@@ -2,6 +2,9 @@
 
 A new Flutter project.
 
+# deploy
+https://girlfriend-9f134.web.app/
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
