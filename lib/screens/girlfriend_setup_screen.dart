@@ -1,7 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/girlfriend.dart';
+import '../models/partner.dart';
 import '../providers/providers.dart';
 import 'dashboard_screen.dart';
 
@@ -91,18 +91,20 @@ class _GirlfriendSetupScreenState extends ConsumerState<GirlfriendSetupScreen> {
         outfit: _outfit,
       );
 
-      // Riverpod で Girlfriend を保存
-      final girlfriend = Girlfriend(
+      // Riverpod で Partner を保存 (DBスキーマに合わせて)
+      final partner = Partner(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
+        userId: 'temp_user_id', // TODO: Replace with actual user ID from auth
         name: _nameController.text,
         personality: _personality,
-        voice: _voice,
         hairColor: _hairColor,
-        outfit: _outfit,
-        relationLevel: 0,
-        createdAt: DateTime.now(),
+        voiceType: _voice,
+        currentStage: 'stage_1',
+        stamina: 50,
+        intelligence: 50,
+        sense: 50,
       );
-      ref.read(girlfriendNotifierProvider.notifier).setGirlfriend(girlfriend);
+      ref.read(partnerNotifierProvider.notifier).setPartner(partner);
 
       // Call parent callback if provided
       widget.onComplete(config);

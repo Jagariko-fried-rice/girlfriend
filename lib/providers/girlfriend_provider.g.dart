@@ -6,7 +6,7 @@ part of 'girlfriend_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$currentGirlfriendHash() => r'e8436f097fc44c3a8e2629de1a8b30992f28ef4e';
+String _$currentGirlfriendHash() => r'31646efea33c1ee6abd89a1b23ea113035d3d0b7';
 
 /// See also [currentGirlfriend].
 @ProviderFor(currentGirlfriend)

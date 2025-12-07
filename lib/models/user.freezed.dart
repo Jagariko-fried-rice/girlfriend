@@ -17,11 +17,10 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$User {
-  String get id => throw _privateConstructorUsedError;
-  String get name => throw _privateConstructorUsedError;
+  String get uid => throw _privateConstructorUsedError;
+  String get auth0Sub => throw _privateConstructorUsedError;
+  String get displayName => throw _privateConstructorUsedError;
   String get email => throw _privateConstructorUsedError;
-  int get age => throw _privateConstructorUsedError;
-  String get sleepTime => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
 
   /// Create a copy of User
@@ -36,11 +35,10 @@ abstract class $UserCopyWith<$Res> {
       _$UserCopyWithImpl<$Res, User>;
   @useResult
   $Res call({
-    String id,
-    String name,
+    String uid,
+    String auth0Sub,
+    String displayName,
     String email,
-    int age,
-    String sleepTime,
     DateTime createdAt,
   });
 }
@@ -60,39 +58,33 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
-    Object? name = null,
+    Object? uid = null,
+    Object? auth0Sub = null,
+    Object? displayName = null,
     Object? email = null,
-    Object? age = null,
-    Object? sleepTime = null,
     Object? createdAt = null,
   }) {
     return _then(
       _value.copyWith(
-            id:
-                null == id
-                    ? _value.id
-                    : id // ignore: cast_nullable_to_non_nullable
+            uid:
+                null == uid
+                    ? _value.uid
+                    : uid // ignore: cast_nullable_to_non_nullable
                         as String,
-            name:
-                null == name
-                    ? _value.name
-                    : name // ignore: cast_nullable_to_non_nullable
+            auth0Sub:
+                null == auth0Sub
+                    ? _value.auth0Sub
+                    : auth0Sub // ignore: cast_nullable_to_non_nullable
+                        as String,
+            displayName:
+                null == displayName
+                    ? _value.displayName
+                    : displayName // ignore: cast_nullable_to_non_nullable
                         as String,
             email:
                 null == email
                     ? _value.email
                     : email // ignore: cast_nullable_to_non_nullable
-                        as String,
-            age:
-                null == age
-                    ? _value.age
-                    : age // ignore: cast_nullable_to_non_nullable
-                        as int,
-            sleepTime:
-                null == sleepTime
-                    ? _value.sleepTime
-                    : sleepTime // ignore: cast_nullable_to_non_nullable
                         as String,
             createdAt:
                 null == createdAt
@@ -114,11 +106,10 @@ abstract class _$$UserImplCopyWith<$Res> implements $UserCopyWith<$Res> {
   @override
   @useResult
   $Res call({
-    String id,
-    String name,
+    String uid,
+    String auth0Sub,
+    String displayName,
     String email,
-    int age,
-    String sleepTime,
     DateTime createdAt,
   });
 }
@@ -135,39 +126,33 @@ class __$$UserImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
-    Object? name = null,
+    Object? uid = null,
+    Object? auth0Sub = null,
+    Object? displayName = null,
     Object? email = null,
-    Object? age = null,
-    Object? sleepTime = null,
     Object? createdAt = null,
   }) {
     return _then(
       _$UserImpl(
-        id:
-            null == id
-                ? _value.id
-                : id // ignore: cast_nullable_to_non_nullable
+        uid:
+            null == uid
+                ? _value.uid
+                : uid // ignore: cast_nullable_to_non_nullable
                     as String,
-        name:
-            null == name
-                ? _value.name
-                : name // ignore: cast_nullable_to_non_nullable
+        auth0Sub:
+            null == auth0Sub
+                ? _value.auth0Sub
+                : auth0Sub // ignore: cast_nullable_to_non_nullable
+                    as String,
+        displayName:
+            null == displayName
+                ? _value.displayName
+                : displayName // ignore: cast_nullable_to_non_nullable
                     as String,
         email:
             null == email
                 ? _value.email
                 : email // ignore: cast_nullable_to_non_nullable
-                    as String,
-        age:
-            null == age
-                ? _value.age
-                : age // ignore: cast_nullable_to_non_nullable
-                    as int,
-        sleepTime:
-            null == sleepTime
-                ? _value.sleepTime
-                : sleepTime // ignore: cast_nullable_to_non_nullable
                     as String,
         createdAt:
             null == createdAt
@@ -183,30 +168,27 @@ class __$$UserImplCopyWithImpl<$Res>
 
 class _$UserImpl implements _User {
   const _$UserImpl({
-    required this.id,
-    required this.name,
+    required this.uid,
+    required this.auth0Sub,
+    required this.displayName,
     required this.email,
-    required this.age,
-    required this.sleepTime,
     required this.createdAt,
   });
 
   @override
-  final String id;
+  final String uid;
   @override
-  final String name;
+  final String auth0Sub;
+  @override
+  final String displayName;
   @override
   final String email;
-  @override
-  final int age;
-  @override
-  final String sleepTime;
   @override
   final DateTime createdAt;
 
   @override
   String toString() {
-    return 'User(id: $id, name: $name, email: $email, age: $age, sleepTime: $sleepTime, createdAt: $createdAt)';
+    return 'User(uid: $uid, auth0Sub: $auth0Sub, displayName: $displayName, email: $email, createdAt: $createdAt)';
   }
 
   @override
@@ -214,19 +196,19 @@ class _$UserImpl implements _User {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$UserImpl &&
-            (identical(other.id, id) || other.id == id) &&
-            (identical(other.name, name) || other.name == name) &&
+            (identical(other.uid, uid) || other.uid == uid) &&
+            (identical(other.auth0Sub, auth0Sub) ||
+                other.auth0Sub == auth0Sub) &&
+            (identical(other.displayName, displayName) ||
+                other.displayName == displayName) &&
             (identical(other.email, email) || other.email == email) &&
-            (identical(other.age, age) || other.age == age) &&
-            (identical(other.sleepTime, sleepTime) ||
-                other.sleepTime == sleepTime) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt));
   }
 
   @override
   int get hashCode =>
-      Object.hash(runtimeType, id, name, email, age, sleepTime, createdAt);
+      Object.hash(runtimeType, uid, auth0Sub, displayName, email, createdAt);
 
   /// Create a copy of User
   /// with the given fields replaced by the non-null parameter values.
@@ -239,24 +221,21 @@ class _$UserImpl implements _User {
 
 abstract class _User implements User {
   const factory _User({
-    required final String id,
-    required final String name,
+    required final String uid,
+    required final String auth0Sub,
+    required final String displayName,
     required final String email,
-    required final int age,
-    required final String sleepTime,
     required final DateTime createdAt,
   }) = _$UserImpl;
 
   @override
-  String get id;
+  String get uid;
   @override
-  String get name;
+  String get auth0Sub;
+  @override
+  String get displayName;
   @override
   String get email;
-  @override
-  int get age;
-  @override
-  String get sleepTime;
   @override
   DateTime get createdAt;
 

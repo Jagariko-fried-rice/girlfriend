@@ -24,7 +24,7 @@ final currentPartnerProvider = AutoDisposeProvider<Partner?>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef CurrentPartnerRef = AutoDisposeProviderRef<Partner?>;
-String _$partnerNotifierHash() => r'd6d25ef02b481f1ecc073850c96933a053099c8d';
+String _$partnerNotifierHash() => r'3e0c3541d7e23c4d98dec54de90cac30dfc68859';
 
 /// See also [PartnerNotifier].
 @ProviderFor(PartnerNotifier)

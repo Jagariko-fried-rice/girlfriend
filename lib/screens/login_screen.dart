@@ -98,13 +98,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
         age: _ageController.text.trim(),
       );
 
-      // Riverpod で User を保存
+      // Riverpod で User を保存 (DBスキーマに合わせて)
       final user = User(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
-        name: data.name,
+        uid: DateTime.now().millisecondsSinceEpoch.toString(),
+        auth0Sub: 'temp_sub_${DateTime.now().millisecondsSinceEpoch}',
+        displayName: data.name,
         email: data.email,
-        age: int.tryParse(data.age) ?? 20,
-        sleepTime: data.sleepTime,
         createdAt: DateTime.now(),
       );
       ref.read(userNotifierProvider.notifier).setUser(user);

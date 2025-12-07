@@ -18,14 +18,15 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$Partner {
   String get id => throw _privateConstructorUsedError;
+  String get userId => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
+  String get personality => throw _privateConstructorUsedError;
+  String get hairColor => throw _privateConstructorUsedError;
+  String get voiceType => throw _privateConstructorUsedError;
+  String get currentStage => throw _privateConstructorUsedError;
   int get stamina => throw _privateConstructorUsedError;
   int get intelligence => throw _privateConstructorUsedError;
   int get sense => throw _privateConstructorUsedError;
-  int get relationLevel => throw _privateConstructorUsedError; // 0-100 信頼度
-  String? get assignedAgentId => throw _privateConstructorUsedError;
-  DateTime get createdAt => throw _privateConstructorUsedError;
-  DateTime get updatedAt => throw _privateConstructorUsedError;
 
   /// Create a copy of Partner
   /// with the given fields replaced by the non-null parameter values.
@@ -40,14 +41,15 @@ abstract class $PartnerCopyWith<$Res> {
   @useResult
   $Res call({
     String id,
+    String userId,
     String name,
+    String personality,
+    String hairColor,
+    String voiceType,
+    String currentStage,
     int stamina,
     int intelligence,
     int sense,
-    int relationLevel,
-    String? assignedAgentId,
-    DateTime createdAt,
-    DateTime updatedAt,
   });
 }
 
@@ -67,14 +69,15 @@ class _$PartnerCopyWithImpl<$Res, $Val extends Partner>
   @override
   $Res call({
     Object? id = null,
+    Object? userId = null,
     Object? name = null,
+    Object? personality = null,
+    Object? hairColor = null,
+    Object? voiceType = null,
+    Object? currentStage = null,
     Object? stamina = null,
     Object? intelligence = null,
     Object? sense = null,
-    Object? relationLevel = null,
-    Object? assignedAgentId = freezed,
-    Object? createdAt = null,
-    Object? updatedAt = null,
   }) {
     return _then(
       _value.copyWith(
@@ -83,10 +86,35 @@ class _$PartnerCopyWithImpl<$Res, $Val extends Partner>
                     ? _value.id
                     : id // ignore: cast_nullable_to_non_nullable
                         as String,
+            userId:
+                null == userId
+                    ? _value.userId
+                    : userId // ignore: cast_nullable_to_non_nullable
+                        as String,
             name:
                 null == name
                     ? _value.name
                     : name // ignore: cast_nullable_to_non_nullable
+                        as String,
+            personality:
+                null == personality
+                    ? _value.personality
+                    : personality // ignore: cast_nullable_to_non_nullable
+                        as String,
+            hairColor:
+                null == hairColor
+                    ? _value.hairColor
+                    : hairColor // ignore: cast_nullable_to_non_nullable
+                        as String,
+            voiceType:
+                null == voiceType
+                    ? _value.voiceType
+                    : voiceType // ignore: cast_nullable_to_non_nullable
+                        as String,
+            currentStage:
+                null == currentStage
+                    ? _value.currentStage
+                    : currentStage // ignore: cast_nullable_to_non_nullable
                         as String,
             stamina:
                 null == stamina
@@ -103,26 +131,6 @@ class _$PartnerCopyWithImpl<$Res, $Val extends Partner>
                     ? _value.sense
                     : sense // ignore: cast_nullable_to_non_nullable
                         as int,
-            relationLevel:
-                null == relationLevel
-                    ? _value.relationLevel
-                    : relationLevel // ignore: cast_nullable_to_non_nullable
-                        as int,
-            assignedAgentId:
-                freezed == assignedAgentId
-                    ? _value.assignedAgentId
-                    : assignedAgentId // ignore: cast_nullable_to_non_nullable
-                        as String?,
-            createdAt:
-                null == createdAt
-                    ? _value.createdAt
-                    : createdAt // ignore: cast_nullable_to_non_nullable
-                        as DateTime,
-            updatedAt:
-                null == updatedAt
-                    ? _value.updatedAt
-                    : updatedAt // ignore: cast_nullable_to_non_nullable
-                        as DateTime,
           )
           as $Val,
     );
@@ -139,14 +147,15 @@ abstract class _$$PartnerImplCopyWith<$Res> implements $PartnerCopyWith<$Res> {
   @useResult
   $Res call({
     String id,
+    String userId,
     String name,
+    String personality,
+    String hairColor,
+    String voiceType,
+    String currentStage,
     int stamina,
     int intelligence,
     int sense,
-    int relationLevel,
-    String? assignedAgentId,
-    DateTime createdAt,
-    DateTime updatedAt,
   });
 }
 
@@ -165,14 +174,15 @@ class __$$PartnerImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = null,
+    Object? userId = null,
     Object? name = null,
+    Object? personality = null,
+    Object? hairColor = null,
+    Object? voiceType = null,
+    Object? currentStage = null,
     Object? stamina = null,
     Object? intelligence = null,
     Object? sense = null,
-    Object? relationLevel = null,
-    Object? assignedAgentId = freezed,
-    Object? createdAt = null,
-    Object? updatedAt = null,
   }) {
     return _then(
       _$PartnerImpl(
@@ -181,10 +191,35 @@ class __$$PartnerImplCopyWithImpl<$Res>
                 ? _value.id
                 : id // ignore: cast_nullable_to_non_nullable
                     as String,
+        userId:
+            null == userId
+                ? _value.userId
+                : userId // ignore: cast_nullable_to_non_nullable
+                    as String,
         name:
             null == name
                 ? _value.name
                 : name // ignore: cast_nullable_to_non_nullable
+                    as String,
+        personality:
+            null == personality
+                ? _value.personality
+                : personality // ignore: cast_nullable_to_non_nullable
+                    as String,
+        hairColor:
+            null == hairColor
+                ? _value.hairColor
+                : hairColor // ignore: cast_nullable_to_non_nullable
+                    as String,
+        voiceType:
+            null == voiceType
+                ? _value.voiceType
+                : voiceType // ignore: cast_nullable_to_non_nullable
+                    as String,
+        currentStage:
+            null == currentStage
+                ? _value.currentStage
+                : currentStage // ignore: cast_nullable_to_non_nullable
                     as String,
         stamina:
             null == stamina
@@ -201,26 +236,6 @@ class __$$PartnerImplCopyWithImpl<$Res>
                 ? _value.sense
                 : sense // ignore: cast_nullable_to_non_nullable
                     as int,
-        relationLevel:
-            null == relationLevel
-                ? _value.relationLevel
-                : relationLevel // ignore: cast_nullable_to_non_nullable
-                    as int,
-        assignedAgentId:
-            freezed == assignedAgentId
-                ? _value.assignedAgentId
-                : assignedAgentId // ignore: cast_nullable_to_non_nullable
-                    as String?,
-        createdAt:
-            null == createdAt
-                ? _value.createdAt
-                : createdAt // ignore: cast_nullable_to_non_nullable
-                    as DateTime,
-        updatedAt:
-            null == updatedAt
-                ? _value.updatedAt
-                : updatedAt // ignore: cast_nullable_to_non_nullable
-                    as DateTime,
       ),
     );
   }
@@ -231,39 +246,41 @@ class __$$PartnerImplCopyWithImpl<$Res>
 class _$PartnerImpl implements _Partner {
   const _$PartnerImpl({
     required this.id,
+    required this.userId,
     required this.name,
+    required this.personality,
+    required this.hairColor,
+    required this.voiceType,
+    required this.currentStage,
     required this.stamina,
     required this.intelligence,
     required this.sense,
-    required this.relationLevel,
-    this.assignedAgentId,
-    required this.createdAt,
-    required this.updatedAt,
   });
 
   @override
   final String id;
   @override
+  final String userId;
+  @override
   final String name;
+  @override
+  final String personality;
+  @override
+  final String hairColor;
+  @override
+  final String voiceType;
+  @override
+  final String currentStage;
   @override
   final int stamina;
   @override
   final int intelligence;
   @override
   final int sense;
-  @override
-  final int relationLevel;
-  // 0-100 信頼度
-  @override
-  final String? assignedAgentId;
-  @override
-  final DateTime createdAt;
-  @override
-  final DateTime updatedAt;
 
   @override
   String toString() {
-    return 'Partner(id: $id, name: $name, stamina: $stamina, intelligence: $intelligence, sense: $sense, relationLevel: $relationLevel, assignedAgentId: $assignedAgentId, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'Partner(id: $id, userId: $userId, name: $name, personality: $personality, hairColor: $hairColor, voiceType: $voiceType, currentStage: $currentStage, stamina: $stamina, intelligence: $intelligence, sense: $sense)';
   }
 
   @override
@@ -272,33 +289,35 @@ class _$PartnerImpl implements _Partner {
         (other.runtimeType == runtimeType &&
             other is _$PartnerImpl &&
             (identical(other.id, id) || other.id == id) &&
+            (identical(other.userId, userId) || other.userId == userId) &&
             (identical(other.name, name) || other.name == name) &&
+            (identical(other.personality, personality) ||
+                other.personality == personality) &&
+            (identical(other.hairColor, hairColor) ||
+                other.hairColor == hairColor) &&
+            (identical(other.voiceType, voiceType) ||
+                other.voiceType == voiceType) &&
+            (identical(other.currentStage, currentStage) ||
+                other.currentStage == currentStage) &&
             (identical(other.stamina, stamina) || other.stamina == stamina) &&
             (identical(other.intelligence, intelligence) ||
                 other.intelligence == intelligence) &&
-            (identical(other.sense, sense) || other.sense == sense) &&
-            (identical(other.relationLevel, relationLevel) ||
-                other.relationLevel == relationLevel) &&
-            (identical(other.assignedAgentId, assignedAgentId) ||
-                other.assignedAgentId == assignedAgentId) &&
-            (identical(other.createdAt, createdAt) ||
-                other.createdAt == createdAt) &&
-            (identical(other.updatedAt, updatedAt) ||
-                other.updatedAt == updatedAt));
+            (identical(other.sense, sense) || other.sense == sense));
   }
 
   @override
   int get hashCode => Object.hash(
     runtimeType,
     id,
+    userId,
     name,
+    personality,
+    hairColor,
+    voiceType,
+    currentStage,
     stamina,
     intelligence,
     sense,
-    relationLevel,
-    assignedAgentId,
-    createdAt,
-    updatedAt,
   );
 
   /// Create a copy of Partner
@@ -313,34 +332,37 @@ class _$PartnerImpl implements _Partner {
 abstract class _Partner implements Partner {
   const factory _Partner({
     required final String id,
+    required final String userId,
     required final String name,
+    required final String personality,
+    required final String hairColor,
+    required final String voiceType,
+    required final String currentStage,
     required final int stamina,
     required final int intelligence,
     required final int sense,
-    required final int relationLevel,
-    final String? assignedAgentId,
-    required final DateTime createdAt,
-    required final DateTime updatedAt,
   }) = _$PartnerImpl;
 
   @override
   String get id;
   @override
+  String get userId;
+  @override
   String get name;
+  @override
+  String get personality;
+  @override
+  String get hairColor;
+  @override
+  String get voiceType;
+  @override
+  String get currentStage;
   @override
   int get stamina;
   @override
   int get intelligence;
   @override
   int get sense;
-  @override
-  int get relationLevel; // 0-100 信頼度
-  @override
-  String? get assignedAgentId;
-  @override
-  DateTime get createdAt;
-  @override
-  DateTime get updatedAt;
 
   /// Create a copy of Partner
   /// with the given fields replaced by the non-null parameter values.

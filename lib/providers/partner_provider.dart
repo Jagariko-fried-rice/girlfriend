@@ -24,11 +24,6 @@ class PartnerNotifier extends _$PartnerNotifier {
     }
   }
 
-  void updateRelationLevel(int level) {
-    if (state != null) {
-      state = state!.copyWith(relationLevel: level.clamp(0, 100));
-    }
-  }
 
   void clearPartner() {
     state = null;
