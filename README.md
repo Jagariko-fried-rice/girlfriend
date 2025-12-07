@@ -1,5 +1,7 @@
 # girlfriend
 
+deployed: https://girlfriend-9f134.web.app/
+
 A new Flutter project.
 
 ## Getting Started

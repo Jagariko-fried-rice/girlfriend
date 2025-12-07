@@ -5,22 +5,28 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'screens/login_screen.dart';
 import 'screens/opening_screen.dart';
 import 'screens/girlfriend_setup_screen.dart';
+import 'screens/home_screen.dart';
 import 'providers/providers.dart';
 
 Future<void> main() async {
+  // Ensure flutter binding has been initialized
   WidgetsFlutterBinding.ensureInitialized();
-  await dotenv.load(fileName: ".env");
 
+  // Load .env file
+  await dotenv.load(fileName: '.env');
+
+  // Initialize Supabase
   await Supabase.initialize(
-    url: dotenv.env['SUPABASE_URL'] ?? '',
-    anonKey: dotenv.env['SUPABASE_ANON_KEY'] ?? '',
+    url: dotenv.env['SUPABASE_URL']!,
+    anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
   );
 
-  runApp(const ProviderScope(child: MyApp()));
+  // Run the app
+  runApp(const ProviderScope(child: MainApp()));
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class MainApp extends StatelessWidget {
+  const MainApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -64,9 +70,7 @@ class AppFlow extends ConsumerWidget {
           },
         );
       case AppStage.home:
-        return const Scaffold(
-          body: Center(child: Text('Home Screen (To be implemented)')),
-        );
+        return const HomeScreen();
     }
   }
 }

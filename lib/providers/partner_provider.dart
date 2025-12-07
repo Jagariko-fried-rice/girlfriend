@@ -1,10 +1,35 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../models/partner.dart';
+import '../services/supabase_service.dart';
 
 part 'partner_provider.g.dart';
 
-// パートナー管理
+// Supabaseサービスプロバイダー
+@riverpod
+SupabaseService supabaseService(SupabaseServiceRef ref) {
+  return SupabaseService();
+}
+
+// パートナー一覧取得（DBから）
+@riverpod
+Future<List<Partner>> partners(PartnersRef ref) async {
+  final service = ref.watch(supabaseServiceProvider);
+  print('DEBUG: Fetching partners from Supabase...');
+  try {
+    final partners = await service.fetchPartners();
+    print('DEBUG: Fetched ${partners.length} partners');
+    for (var p in partners) {
+      print('DEBUG: Partner: ${p.name}');
+    }
+    return partners;
+  } catch (e) {
+    print('DEBUG: Error fetching partners: $e');
+    rethrow;
+  }
+}
+
+// パートナー管理（選択されたパートナー）
 @riverpod
 class PartnerNotifier extends _$PartnerNotifier {
   @override
@@ -23,7 +48,6 @@ class PartnerNotifier extends _$PartnerNotifier {
       );
     }
   }
-
 
   void clearPartner() {
     state = null;
