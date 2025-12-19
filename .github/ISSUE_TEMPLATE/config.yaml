@@ -4,7 +4,7 @@ contact_links:
     url: https://github.com/OWNER/girlfriend/discussions
     about: 使用方法や一般的な質問はこちらでご相談ください
   - name: バグ報告
-    url: https://github.com/OWNER/girlfriend/issues/new?labels=bug
+    url: https://github.com/OWNER/girlfriend/issues/new?labels=bug&template=bug_report.md
     about: バグや不具合の報告。再現手順や環境情報を添えてください
   - name: セキュリティ報告
     url: https://github.com/OWNER/girlfriend/security/policy
