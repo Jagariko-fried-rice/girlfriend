@@ -1,6 +1,6 @@
 ---
 name: "一般テンプレート"
-about: "再現手順や方針・タスクなど、汎用の Issue 用テンプレートです"
+about: "タスクなど、汎用の Issue 用テンプレートです"
 title: ""
 labels: ""
 assignees: []
